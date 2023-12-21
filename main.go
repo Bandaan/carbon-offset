@@ -40,7 +40,7 @@ func helloWorld(c *gin.Context) {
 func main() {
 	router := gin.Default()
 
-	router.GET("check", helloWorld)
+	router.GET("/check", helloWorld)
 	router.POST("/offset", calculateCarbon)
 
 	router.Run("localhost:8080") // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
