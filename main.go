@@ -32,8 +32,15 @@ func calculateCarbon(c *gin.Context) {
 	}
 }
 
+func helloWorld(c *gin.Context) {
+	c.IndentedJSON(http.StatusOK, "Hello world!")
+
+}
+
 func main() {
 	router := gin.Default()
+
+	router.GET("check", helloWorld)
 	router.POST("/offset", calculateCarbon)
 
 	router.Run("localhost:8080") // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
