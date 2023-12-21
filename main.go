@@ -36,7 +36,10 @@ func calculateCarbon(c *gin.Context) {
 
 func helloWorld(c *gin.Context) {
 	c.IndentedJSON(http.StatusOK, "Hello world!")
+}
 
+func helloMob(c *gin.Context) {
+	c.IndentedJSON(http.StatusOK, "Ten alle tijde MOB niet vergeten stevie")
 }
 
 func main() {
@@ -48,6 +51,7 @@ func main() {
 		port = "3000"
 	}
 	router.GET("/check", helloWorld)
+	router.GET("/mob", helloMob)
 	router.POST("/offset", calculateCarbon)
 
 	log.Fatal(router.Run("0.0.0.0:" + port))
