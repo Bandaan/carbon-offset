@@ -45,6 +45,12 @@ func helloMob(c *gin.Context) {
 func main() {
 	router := gin.Default()
 
+	router.Use(func(c *gin.Context) {
+		c.Header("Access-Control-Allow-Origin", "https://carbon-offset-production.up.railway.app") // Replace with your actual origin
+		c.Header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
+		c.Next()
+	})
+
 	port := os.Getenv("PORT")
 
 	if port == "" {
