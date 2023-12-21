@@ -2,7 +2,9 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
+	"log"
 	"net/http"
+	"os"
 )
 
 type offset struct {
@@ -40,8 +42,14 @@ func helloWorld(c *gin.Context) {
 func main() {
 	router := gin.Default()
 
+	port := os.Getenv("PORT")
+
+	if port == "" {
+		port = "3000"
+	}
 	router.GET("/check", helloWorld)
 	router.POST("/offset", calculateCarbon)
 
-	router.Run("localhost:8080") // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
+	log.Fatal(router.Run("0.0.0.0:" + port))
+	// listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
 }
