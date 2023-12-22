@@ -22,7 +22,7 @@ func calculateCarbon(c *gin.Context) {
 	var newOffset offset
 
 	if err := c.BindJSON(&newOffset); err != nil {
-		return
+		c.IndentedJSON(http.StatusCreated, "format is not right")
 	}
 
 	if newOffset.Type == false {
