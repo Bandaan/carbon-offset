@@ -37,9 +37,9 @@ func calculateCarbon(c *gin.Context) {
 	var newPrice float64
 
 	if newOffset.Type == false {
-		newPrice = newOffset.Price * 0.1
+		newPrice = newOffset.Price*0.03 + newOffset.Weight*0.1
 	} else {
-		newPrice = newOffset.Weight * 0.1
+		newPrice = newOffset.Price*0.1 + newOffset.Weight*0.03
 	}
 
 	c.JSON(http.StatusOK, gin.H{"OffsetPrice": newPrice})
