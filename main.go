@@ -15,8 +15,17 @@ type offset struct {
 }
 
 func calculateCarbon(c *gin.Context) {
+	// Your existing CORS headers
 	c.Header("Access-Control-Allow-Origin", "*") // Adjust as needed
 	c.Header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
+
+	// Check if it's a preflight request
+	if c.Request.Method == http.MethodOptions {
+		c.Header("Access-Control-Allow-Methods", "POST")
+		c.Header("Access-Control-Max-Age", "86400") // 24 hours
+		c.JSON(http.StatusOK, nil)
+		return
+	}
 
 	var newOffset offset
 
@@ -51,6 +60,13 @@ func main() {
 		c.Header("Access-Control-Allow-Origin", "*") // Adjust as needed
 		c.Header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
 		c.Next()
+	})
+
+	// Handle OPTIONS request for all routes
+	router.OPTIONS("/*any", func(c *gin.Context) {
+		c.Header("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS")
+		c.Header("Access-Control-Max-Age", "86400") // 24 hours
+		c.JSON(http.StatusOK, nil)
 	})
 
 	port := os.Getenv("PORT")
