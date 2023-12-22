@@ -14,24 +14,26 @@ type offset struct {
 	Type   bool    `json:"type"`
 }
 
-type result struct {
-	OffsetPrice float64
-}
-
 func calculateCarbon(c *gin.Context) {
+	c.Header("Access-Control-Allow-Origin", "*") // Adjust as needed
+	c.Header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
+
 	var newOffset offset
 
-	if err := c.BindJSON(&newOffset); err != nil {
-		c.IndentedJSON(http.StatusCreated, "format is not right")
+	if err := c.ShouldBindJSON(&newOffset); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid JSON format"})
+		return
 	}
 
+	var newPrice float64
+
 	if newOffset.Type == false {
-		newPrice := newOffset.Price * 0.1
-		c.IndentedJSON(http.StatusCreated, newPrice)
+		newPrice = newOffset.Price * 0.1
 	} else {
-		newPrice := newOffset.Weight * 0.1
-		c.IndentedJSON(http.StatusCreated, newPrice)
+		newPrice = newOffset.Weight * 0.1
 	}
+
+	c.JSON(http.StatusOK, gin.H{"OffsetPrice": newPrice})
 }
 
 func helloWorld(c *gin.Context) {
@@ -46,7 +48,7 @@ func main() {
 	router := gin.Default()
 
 	router.Use(func(c *gin.Context) {
-		c.Header("Access-Control-Allow-Origin", "https://carbon-offset-production.up.railway.app") // Replace with your actual origin
+		c.Header("Access-Control-Allow-Origin", "*") // Adjust as needed
 		c.Header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
 		c.Next()
 	})
@@ -56,6 +58,7 @@ func main() {
 	if port == "" {
 		port = "3000"
 	}
+
 	router.GET("/check", helloWorld)
 	router.GET("/mob", helloMob)
 	router.POST("/offset", calculateCarbon)
